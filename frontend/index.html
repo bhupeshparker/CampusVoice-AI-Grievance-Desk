@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CampusVoice — Speak. Detect. Resolve. | AI Campus Incident Platform</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body class="student-portal-body">
+  <header class="app-header student-header">
+    <div class="brand">
+      <div class="logo-icon-ai">
+        <span class="logo-spark">✨</span>
+      </div>
+      <div>
+        <div class="brand-title">CampusVoice <span class="brand-ai-pill">AI</span></div>
+        <div class="brand-sub">Speak. Detect. Resolve.</div>
+      </div>
+    </div>
+    <nav class="nav-links">
+      <a href="/index.html" class="nav-link active">Voice AI Concierge</a>
+      <a href="/dashboard.html" class="nav-link nav-link-admin">
+        <span class="live-dot-mini"></span> Command Center
+      </a>
+    </nav>
+  </header>
+
+  <main class="container concierge-container">
+    <!-- Top AI Status Banner -->
+    <div class="ai-hero-banner">
+      <div class="ai-hero-tag">
+        <span class="pulse-indicator"></span> Natural Voice Grievance Assistant
+      </div>
+      <h1 class="ai-hero-title">Speak Naturally. AI Understands & Resolves.</h1>
+      <p class="ai-hero-subtitle">
+        State your issue in your own words. CampusVoice asks clarifying questions, structures your formal grievance dossier, and alerts campus administration in real time.
+      </p>
+    </div>
+
+    <!-- Central AI Orb & Voice Interaction Core -->
+    <section class="concierge-orb-section">
+      <!-- 3D Glowing Animated AI Orb -->
+      <div class="orb-wrapper">
+        <div id="ai-orb" class="ai-orb state-idle" role="button" tabindex="0" title="Click to Speak">
+          <div class="orb-core"></div>
+          <div class="orb-glow-inner"></div>
+          <div class="orb-ring ring-1"></div>
+          <div class="orb-ring ring-2"></div>
+          <div class="orb-ring ring-3"></div>
+          <div class="orb-icon">
+            <svg id="orb-mic-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+              <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+              <line x1="12" y1="19" x2="12" y2="23"></line>
+              <line x1="8" y1="23" x2="16" y2="23"></line>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Audio Waveform Visualizer -->
+        <div id="waveform" class="waveform-container" aria-hidden="true">
+          <span class="bar bar-1"></span>
+          <span class="bar bar-2"></span>
+          <span class="bar bar-3"></span>
+          <span class="bar bar-4"></span>
+          <span class="bar bar-5"></span>
+          <span class="bar bar-6"></span>
+          <span class="bar bar-7"></span>
+          <span class="bar bar-8"></span>
+          <span class="bar bar-9"></span>
+        </div>
+      </div>
+
+      <!-- State & Live Captioning -->
+      <div class="orb-status-row">
+        <div id="ai-status-badge" class="ai-status-pill">
+          <span class="status-pulse-dot"></span>
+          <span id="ai-status-text">Ready — Tap Orb or Speak Button to Start</span>
+        </div>
+      </div>
+
+      <!-- Live Speech Stream Caption Box -->
+      <div id="live-caption-box" class="live-caption-box hidden">
+        <span class="caption-label">LIVE TRANSCRIPTION:</span>
+        <span id="live-caption-text" class="caption-text"></span>
+        <span class="cursor-blink">|</span>
+      </div>
+
+      <!-- Main Action Controls -->
+      <div class="orb-controls-row">
+        <button id="mic" class="orb-action-btn primary-mic" type="button">
+          <span class="btn-icon">🎙️</span>
+          <span id="mic-label">Start Speaking</span>
+        </button>
+        <button id="stop-listening-btn" class="orb-action-btn secondary-stop hidden" type="button">
+          <span class="btn-icon">⏹️</span>
+          <span>Done Speaking</span>
+        </button>
+      </div>
+
+      <!-- Fallback or typed input bar -->
+      <div class="typed-input-wrapper">
+        <div class="typed-input-bar">
+          <input id="complaint" type="text" placeholder="Or type your complaint here... (e.g. Electricity is unavailable in Block A)" />
+          <button id="analyze" class="typed-send-btn" type="button" title="Send message to AI Concierge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <line x1="22" y1="2" x2="11" y2="13"></line>
+              <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Quick Demo Scenario Chips -->
+      <div class="demo-scenarios-row">
+        <span class="scenario-label">Quick Scenarios:</span>
+        <button type="button" class="scenario-chip" data-hint="Electricity is unavailable in Block A since morning.">
+          ⚡ Electricity Outage (Block A)
+        </button>
+        <button type="button" class="scenario-chip" data-hint="Water supply in Hostel Block B is broken and leaking everywhere.">
+          💧 Water Outage (Hostel B)
+        </button>
+        <button type="button" class="scenario-chip" data-hint="Wi-Fi gateway disconnected on 3rd floor of Central Library.">
+          📶 Wi-Fi Gateway (Library)
+        </button>
+        <button type="button" class="scenario-chip" data-hint="Live exposed 230V wiring in Computer Lab 2 workstation 14.">
+          ⚠️ Live Wire Shock Hazard (Lab 2)
+        </button>
+      </div>
+    </section>
+
+    <!-- Conversational Dialogue Stream -->
+    <section id="chat-stream-section" class="chat-stream-section hidden">
+      <div class="chat-stream-header">
+        <span class="chat-stream-title">AI Concierge Conversation</span>
+        <span id="ai-typing-indicator" class="typing-indicator hidden">AI is thinking...</span>
+      </div>
+      <div id="chat-messages" class="chat-messages-container"></div>
+    </section>
+
+    <!-- Structured Grievance Preview Card (AI Generated) -->
+    <section id="preview-card-section" class="preview-card-section hidden">
+      <div class="preview-card">
+        <div class="preview-card-header">
+          <div class="preview-header-left">
+            <span class="preview-badge-ai">AI Structured Incident</span>
+            <h2 id="preview-title" class="preview-title">Electricity Disruption in Block A</h2>
+          </div>
+          <div class="preview-header-right">
+            <span id="preview-priority-pill" class="pill HIGH">HIGH</span>
+            <span id="preview-category-pill" class="pill-category">ELECTRICITY</span>
+          </div>
+        </div>
+
+        <div class="preview-grid">
+          <div class="preview-item">
+            <span class="item-label">Campus Location</span>
+            <span id="preview-location" class="item-value">📍 Block A</span>
+          </div>
+          <div class="preview-item">
+            <span class="item-label">Jurisdiction Committee</span>
+            <span id="preview-committee" class="item-value">🏛️ Electrical Engineering & Power Utility</span>
+          </div>
+          <div class="preview-item">
+            <span class="item-label">Impact Scope</span>
+            <span id="preview-scope" class="item-value">👥 Block-wide</span>
+          </div>
+          <div class="preview-item">
+            <span class="item-label">Nature of Grievance</span>
+            <span id="preview-type" class="item-value">⚡ Service Outage</span>
+          </div>
+          <div class="preview-item wide">
+            <span class="item-label">Relief / Corrective Action Requested</span>
+            <span id="preview-relief" class="item-value">Immediate restoration of electrical line and backup power check</span>
+          </div>
+          <div class="preview-item wide">
+            <span class="item-label">Factual Description</span>
+            <p id="preview-description" class="item-desc">Comprehensive statement generated by AI from verbatim student testimony.</p>
+          </div>
+        </div>
+
+        <!-- Student Verification Details Row -->
+        <div class="preview-student-row">
+          <div class="student-input-group">
+            <label for="preview-student-name">Complainant Name</label>
+            <input id="preview-student-name" type="text" value="Demo Student" />
+          </div>
+          <div class="student-input-group">
+            <label for="preview-roll-no">Roll / Reg. No.</label>
+            <input id="preview-roll-no" type="text" value="2023-CS-104" />
+          </div>
+          <div class="student-input-group checkbox-group">
+            <label class="confidential-toggle" for="preview-confidential">
+              <input id="preview-confidential" type="checkbox" />
+              <span>🔒 File as Protected Confidential Disclosure</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="preview-actions">
+          <button id="confirm-submit-btn" class="btn-confirm-submit" type="button">
+            <span class="btn-icon">🚀</span>
+            <span>Confirm & Register Incident Dossier</span>
+          </button>
+          <button id="toggle-detailed-form-btn" class="btn-edit-toggle ghost" type="button">
+            <span>⚙️ Edit Granular Institutional Form</span>
+          </button>
+          <button id="reset-conversation-btn" class="btn-reset-ghost ghost" type="button">
+            <span>Restart</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Granular Detailed Form (Collapsible for advanced edits) -->
+    <section id="review" class="panel detailed-form-panel hidden">
+      <div class="review-head">
+        <div>
+          <p class="eyebrow">Institutional Redressal Particulars</p>
+          <h2>Granular Dossier Verification</h2>
+        </div>
+        <div class="badges-row">
+          <span id="sync-indicator" class="sync-indicator">⚡ Live Synced</span>
+          <span id="source-badge" class="badge">Institutional AI Engine</span>
+        </div>
+      </div>
+
+      <div class="live-complaint-box">
+        <label for="review-complaint-input">
+          <span>Verbatim Testimony (Live Sync Active):</span>
+        </label>
+        <textarea id="review-complaint-input" rows="2" placeholder="Edit verbatim testimony to dynamically update dossier..."></textarea>
+      </div>
+
+      <p id="review-note" class="notice hidden"></p>
+
+      <fieldset class="form-section">
+        <legend>1. Formal Classification & Jurisdiction</legend>
+        <div class="grid">
+          <div class="wide">
+            <label for="summary">Formal Grievance Title</label>
+            <input id="summary" type="text" />
+          </div>
+          <div>
+            <label for="category">Department / Discipline</label>
+            <select id="category"></select>
+          </div>
+          <div>
+            <label for="assigned-committee">Designated Redressal Committee</label>
+            <input id="assigned-committee" type="text" readonly class="readonly-input" />
+          </div>
+          <div>
+            <label for="grievance-type">Nature / Type</label>
+            <select id="grievance-type"></select>
+          </div>
+          <div>
+            <label for="priority">Severity Level</label>
+            <select id="priority"></select>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset class="form-section">
+        <legend>2. Incident Location & Timeline</legend>
+        <div class="grid">
+          <div class="wide">
+            <label for="location">Campus Location / Block</label>
+            <input id="location" type="text" list="campus-locations-list" placeholder="Block A, Hostel, Library..." />
+            <datalist id="campus-locations-list"></datalist>
+            <div class="block-quick-select">
+              <span class="block-quick-label">Quick Location:</span>
+              <div id="block-chips" class="block-chips"></div>
+            </div>
+          </div>
+          <div>
+            <label for="start-time">Inception Date & Time</label>
+            <input id="start-time" type="datetime-local" />
+          </div>
+          <div>
+            <label for="end-time">Target Resolution Date</label>
+            <input id="end-time" type="datetime-local" />
+          </div>
+          <div>
+            <label for="recurrence">Recurrence History</label>
+            <select id="recurrence"></select>
+          </div>
+          <div class="prior-reported-box">
+            <label class="checkbox-label" for="prior-reported">
+              <input id="prior-reported" type="checkbox" />
+              <span>Previously notified local warden / caretaker</span>
+            </label>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset class="form-section">
+        <legend>3. Impact & Relief</legend>
+        <div class="grid">
+          <div>
+            <label for="affected-scope">Scope of Affected Students</label>
+            <select id="affected-scope"></select>
+          </div>
+          <div>
+            <label for="relief-sought">Specific Relief Sought</label>
+            <input id="relief-sought" type="text" />
+          </div>
+          <div class="wide">
+            <label for="description">Factual Statement</label>
+            <textarea id="description" rows="3"></textarea>
+          </div>
+        </div>
+      </fieldset>
+
+      <div class="actions">
+        <button id="submit" class="primary" type="button">Save & Lodge Formal Grievance</button>
+        <button id="hide-detailed-btn" class="ghost" type="button">Close Detailed Form</button>
+      </div>
+    </section>
+
+    <!-- Ticket Creation Success Screen -->
+    <section id="success" class="panel success-card-panel hidden">
+      <div class="success-banner-modern">
+        <div class="success-icon-ring">
+          <span class="success-check-mark">✓</span>
+        </div>
+        <p class="success-eyebrow">Dossier Registered & Dispatched</p>
+        <h2 class="success-title">Campus Incident Successfully Lodged</h2>
+        <div class="success-ticket-badge">
+          <span class="ticket-prefix">DOCKET ID</span>
+          <span id="ticket-id" class="ticket-number">CV-1042</span>
+        </div>
+      </div>
+
+      <div class="success-meta-box">
+        <div class="meta-row">
+          <span class="meta-title">🏛️ Dispatched Committee:</span>
+          <span id="ticket-committee-meta" class="meta-val">Electrical Engineering & Power Utility Services</span>
+        </div>
+        <div class="meta-row">
+          <span class="meta-title">📍 Incident Location:</span>
+          <span id="ticket-meta" class="meta-val">Block A</span>
+        </div>
+        <div class="meta-row">
+          <span class="meta-title">⏱️ Statutory SLA:</span>
+          <span id="ticket-time-meta" class="meta-val">Resolution Target: 24 Hours</span>
+        </div>
+        <div class="meta-row">
+          <span class="meta-title">🛠️ Relief Target:</span>
+          <span id="ticket-relief-meta" class="meta-val">Immediate line restoration</span>
+        </div>
+      </div>
+
+      <p id="logged-quote" class="logged-quote-modern"></p>
+
+      <div class="success-actions-row">
+        <a id="dashboard-link" class="btn-success-primary" href="/dashboard.html">
+          <span>Inspect on Authority Dashboard →</span>
+        </a>
+        <button id="another" class="btn-success-secondary ghost" type="button">
+          <span>Lodge Another Grievance</span>
+        </button>
+      </div>
+    </section>
+
+    <p id="error" class="error-banner hidden"></p>
+    <footer class="portal-footer">
+      <span>CampusVoice AI Incident Intelligence Platform • University Grievance Redressal Regulation Compliant</span>
+    </footer>
+  </main>
+
+  <script src="/js/common.js"></script>
+  <script src="/js/voice.js"></script>
+  <script src="/js/grievance.js"></script>
+</body>
+</html>

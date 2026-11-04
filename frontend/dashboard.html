@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Command Center — CampusVoice AI Incident Intelligence</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body class="admin-theme">
+  <!-- Command Center Header -->
+  <header class="app-header admin-header">
+    <div class="brand">
+      <div class="logo-icon-admin">
+        <span>⚡</span>
+      </div>
+      <div>
+        <div class="brand-title">CampusVoice <span class="ops-badge">OPS CENTER</span></div>
+        <div class="brand-sub">AI Campus Incident Intelligence & Redressal Desk</div>
+      </div>
+    </div>
+
+    <!-- Live Telemetry & AI Status Indicators -->
+    <div class="admin-header-status">
+      <div class="status-pill-telemetry">
+        <span class="live-pulse-dot"></span>
+        <span>LIVE TELEMETRY</span>
+      </div>
+      <div id="ai-engine-status-pill" class="status-pill-ai" title="AI Incident Engine Active">
+        <span class="ai-spark-dot">🧠</span>
+        <span id="ai-engine-status-label">AI DETECTOR: ONLINE</span>
+      </div>
+    </div>
+
+    <div class="admin-header-actions">
+      <a href="/index.html" class="nav-btn ghost-light">Student Portal</a>
+      <button id="open-settings-btn" class="nav-btn ghost-light" type="button" title="Configure AI API Key">
+        <span>⚙️ AI Settings</span>
+      </button>
+      <button id="refresh" class="nav-btn primary-glow" type="button">
+        <span>🔄 Sync Real-Time</span>
+      </button>
+    </div>
+  </header>
+
+  <main class="container admin-container">
+    <!-- Top Executive KPI Stats Bar -->
+    <section id="stats" class="admin-kpi-grid"></section>
+
+    <!-- Incident Intelligence & Spatial Campus Map Layout -->
+    <div class="admin-intelligence-layout">
+      <!-- Left Column: Campus Pulse Schematic Map (SVG Blueprint) -->
+      <section class="admin-card pulse-map-card">
+        <div class="admin-card-head">
+          <div>
+            <div class="card-tag">SPATIAL INCIDENT TELEMETRY</div>
+            <h2 class="card-title">Campus Pulse — Schematic Facility Grid</h2>
+          </div>
+          <div class="map-legend">
+            <span class="legend-item"><span class="legend-dot dot-normal"></span> Normal</span>
+            <span class="legend-item"><span class="legend-dot dot-elevated"></span> Elevated (1-2)</span>
+            <span class="legend-item"><span class="legend-dot dot-critical"></span> Critical / Incident (3+)</span>
+          </div>
+        </div>
+
+        <div class="campus-svg-wrapper">
+          <svg id="campus-pulse-svg" viewBox="0 0 600 480" class="campus-blueprint-svg">
+            <defs>
+              <pattern id="blueprint-grid" width="30" height="30" patternUnits="userSpaceOnUse">
+                <path d="M 30 0 L 0 0 0 30" fill="none" stroke="rgba(30, 41, 59, 0.45)" stroke-width="0.8"/>
+              </pattern>
+              <!-- Pulsing Radar Glow Filters -->
+              <filter id="glow-red" x="-40%" y="-40%" width="180%" height="180%">
+                <feGaussianBlur stdDeviation="6" result="blur" />
+                <feComposite in="SourceGraphic" in2="blur" operator="over" />
+              </filter>
+              <filter id="glow-amber" x="-40%" y="-40%" width="180%" height="180%">
+                <feGaussianBlur stdDeviation="4" result="blur" />
+                <feComposite in="SourceGraphic" in2="blur" operator="over" />
+              </filter>
+            </defs>
+
+            <!-- Background Grid -->
+            <rect width="100%" height="100%" fill="url(#blueprint-grid)" class="map-bg-grid" />
+
+            <!-- Interconnecting Campus Pathways -->
+            <g class="pathway-network" stroke="#1e293b" stroke-width="1.5" stroke-dasharray="4,4">
+              <!-- Top Row to Middle Row -->
+              <line x1="135" y1="125" x2="135" y2="210" />
+              <line x1="305" y1="125" x2="305" y2="210" />
+              <line x1="475" y1="125" x2="475" y2="210" />
+              <!-- Middle Row to Bottom Row -->
+              <line x1="135" y1="295" x2="135" y2="350" />
+              <line x1="305" y1="295" x2="305" y2="350" />
+              <line x1="475" y1="295" x2="475" y2="350" />
+              <!-- Horizontal Connections -->
+              <line x1="200" y1="80" x2="240" y2="80" />
+              <line x1="370" y1="80" x2="410" y2="80" />
+              <line x1="200" y1="250" x2="240" y2="250" />
+              <line x1="370" y1="250" x2="410" y2="250" />
+              <line x1="200" y1="390" x2="240" y2="390" />
+              <line x1="370" y1="390" x2="410" y2="390" />
+            </g>
+
+            <!-- Dynamic Interactive Facility Nodes rendered by JavaScript -->
+            <g id="campus-nodes-layer"></g>
+          </svg>
+        </div>
+
+        <div class="map-footer-hint">
+          <span>💡 Tap any campus facility node above to filter the grievance docket queue below.</span>
+          <button id="clear-map-filter" class="btn-clear-filter hidden" type="button">Reset Map Filter</button>
+        </div>
+      </section>
+
+      <!-- Right Column: Emerging Incident Intelligence & Live Telemetry -->
+      <section class="admin-side-column">
+        <!-- Emerging Incident Alert Cards Container -->
+        <div class="admin-card emerging-incidents-card">
+          <div class="admin-card-head">
+            <div>
+              <div class="card-tag tag-alert">AI INCIDENT CORRELATION</div>
+              <h2 class="card-title">Emerging Incidents & Clusters</h2>
+            </div>
+            <span id="incident-cluster-count" class="cluster-badge">0 Detected</span>
+          </div>
+
+          <div id="emerging-incidents-list" class="emerging-incidents-list">
+            <!-- Dynamic cards injected via JavaScript -->
+          </div>
+        </div>
+
+        <!-- Live Activity Telemetry Feed -->
+        <div class="admin-card telemetry-card">
+          <div class="admin-card-head">
+            <div>
+              <div class="card-tag">SYSTEM TELEMETRY</div>
+              <h2 class="card-title">Live Redressal Stream</h2>
+            </div>
+            <span class="live-stream-dot">●</span>
+          </div>
+          <div id="telemetry-feed" class="telemetry-feed-container"></div>
+        </div>
+      </section>
+    </div>
+
+    <!-- Central Incident Docket Queue (Table) -->
+    <section class="admin-card queue-card">
+      <div class="queue-card-head">
+        <div>
+          <div class="card-tag">STATUTORY CASE MANAGEMENT</div>
+          <h2 class="card-title">Central Incident Docket & Redressal Queue</h2>
+        </div>
+        <div class="queue-active-filter" id="active-filter-indicator">
+          <span>Viewing: <b>All Locations</b></span>
+        </div>
+      </div>
+
+      <!-- Filters & Search Toolbar -->
+      <div class="admin-toolbar">
+        <div class="search-box-modern">
+          <span class="search-icon">🔍</span>
+          <input id="search" type="search" placeholder="Search by Docket ID, Student Name, Roll No, Location, or Keyword..." />
+        </div>
+        <div class="admin-filters-row">
+          <select id="filter-category" title="Filter by Department"></select>
+          <select id="filter-priority" title="Filter by Priority"></select>
+          <select id="filter-status" title="Filter by Status"></select>
+          <select id="filter-location" title="Filter by Campus Location"></select>
+        </div>
+      </div>
+
+      <p id="error" class="error-banner hidden"></p>
+
+      <!-- High-Density Grievances Table -->
+      <div class="admin-table-wrapper">
+        <table class="tickets-table-modern">
+          <thead>
+            <tr>
+              <th style="width: 110px;">Docket ID</th>
+              <th style="width: 140px;">Complainant</th>
+              <th>Incident Particulars & Verbatim Statement</th>
+              <th style="width: 180px;">Designated Committee</th>
+              <th style="width: 110px;">Severity</th>
+              <th style="width: 150px;">Relief Sought</th>
+              <th style="width: 180px;">Redressal Status</th>
+              <th style="width: 80px;">Action</th>
+            </tr>
+          </thead>
+          <tbody id="table-body"></tbody>
+        </table>
+
+        <div id="empty" class="empty-state-modern hidden">
+          <div class="empty-icon">📂</div>
+          <h3>No Incident Dockets Found</h3>
+          <p>No grievances match your current search and filter criteria.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Modal 1: Full Case Dossier Inspection & ATR -->
+  <dialog id="dossier-modal" class="modal-modern">
+    <div class="modal-box-modern">
+      <div class="modal-header-modern">
+        <div class="modal-title-left">
+          <span id="modal-ticket-id" class="modal-docket-pill">CV-1042</span>
+          <h2 id="modal-summary">Campus Incident Dossier</h2>
+        </div>
+        <button id="modal-close" class="modal-close-btn" type="button" aria-label="Close modal">&times;</button>
+      </div>
+      <div class="modal-body-modern" id="modal-content"></div>
+    </div>
+  </dialog>
+
+  <!-- Modal 2: AI Settings & Gemini API Key Configuration -->
+  <dialog id="settings-modal" class="modal-modern">
+    <div class="modal-box-modern settings-modal-box">
+      <div class="modal-header-modern">
+        <div class="modal-title-left">
+          <span class="modal-docket-pill">AI CONFIGURATION</span>
+          <h2>Campus Incident AI Settings</h2>
+        </div>
+        <button id="settings-close" class="modal-close-btn" type="button" aria-label="Close modal">&times;</button>
+      </div>
+      <div class="modal-body-modern">
+        <div class="settings-status-box">
+          <div class="settings-status-row">
+            <span>Current AI Engine:</span>
+            <strong id="settings-engine-name">Google Gemini 2.5 Flash / Neural Fallback</strong>
+          </div>
+          <div class="settings-status-row">
+            <span>Status:</span>
+            <span id="settings-active-badge" class="badge-active">Online</span>
+          </div>
+        </div>
+
+        <div class="settings-form-group">
+          <label for="gemini-api-key-input">Gemini API Key (Optional)</label>
+          <input id="gemini-api-key-input" type="password" placeholder="AIzaSy... (Paste Gemini API key to enable live cloud inference)" />
+          <p class="settings-help">
+            Note: If no key is provided, the platform seamlessly uses its embedded Institutional Rule-based Neural Classifier so all features work 100% offline.
+          </p>
+        </div>
+
+        <div class="settings-actions">
+          <button id="save-settings-btn" class="btn-confirm-submit" type="button">Save AI Configuration</button>
+          <button id="test-ai-btn" class="ghost-light" type="button">Test AI Response</button>
+        </div>
+        <p id="settings-notice" class="settings-notice hidden"></p>
+      </div>
+    </div>
+  </dialog>
+
+  <script src="/js/common.js"></script>
+  <script src="/js/dashboard.js"></script>
+</body>
+</html>
